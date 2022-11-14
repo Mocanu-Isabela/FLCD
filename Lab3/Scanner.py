@@ -7,7 +7,7 @@ class Scanner:
         self.__identifiers = []
         self.__symbol_table = HashTable()
         self.__current_line = 0
-        self.__pif = []  # [(string, int), ...]
+        self.__pif = []
 
     def get_ST(self):
         return self.__symbol_table
@@ -17,21 +17,8 @@ class Scanner:
 
     def scan(self, program):
         for line in program:
-            # print("Lineee:" + str(line[1]) + "uuu")
             self.__current_line += 1
             self.get_tokens_from_line(str(line[1]))
-            # print("----------------------------------")
-            # print("PIF")
-            # pif = self.__pif
-            # for element in pif:
-            #     print(str(element[0]) + " | " + str(element[1]) + "\n")
-            # print("++++++++++++++++++++++++++++++++++++")
-            # print("ST")
-            # st = self.__symbol_table.get_all()
-            # for element2 in st:
-            #     print(str(element2) + "\n")
-            #
-            # print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 
     def get_tokens_from_line(self, line):
         index = 0
@@ -50,39 +37,33 @@ class Scanner:
 
         # we check if the token is an identifier or a constant
         while index < len(line):
-            # print("lung" + str(len(line)) + "index" + str(index))
             token_is_identifier_or_constant = False
 
             if is_a_letter(line[index]) and index > 3 and (line.strip()[0:3] == "DEF" or (
-                    line[index - 2] == "d" and line[index - 1] == "(")):  # identifier
+                    line[index - 2] == "d" and line[index - 1] == "(")):
                 index = self.treat_identifier(line, index)
                 token_is_identifier_or_constant = True
                 if index == len(line):
                     break
-            # else:
-            #     print(str(is_a_letter(line[index])))
 
             if (line[index] == "-" or line[index] == "+") and (index + 1) < len(line) and line[
-                index + 1] == "0":  # +0... or -0...
+                index + 1] == "0":
                 raise Exception("Lexical error: a number cannot start with 0. Line: " + str(self.__current_line))
 
-            if line[index] == "0" and (index + 1) < len(line) and is_a_digit(line[index + 1]):  # 0...
+            if line[index] == "0" and (index + 1) < len(line) and is_a_digit(line[index + 1]):
                 raise Exception("Lexical error: a number cannot start with 0. Line: " + str(self.__current_line))
 
             expression_instead_of_nr = ((line[index] == "-" or line[index] == "+") and (index + 1) < len(
                 line) and is_a_digit(line[index + 1]) and len(self.__pif) != 0) and (
                                                self.__pif[len(self.__pif) - 1][0] == "ident" or
-                                               self.__pif[len(self.__pif) - 1][0] == "const")  # ?
+                                               self.__pif[len(self.__pif) - 1][0] == "const")
 
             if not expression_instead_of_nr:
-                # print(str(line[index])+"<-")
                 ends = [")", ",", " ", "\n", "\t"]
                 if ((is_a_digit(line[index]) and (
                         index + 1 == len(line) or ((index + 1) < len(line) and (line[index + 1] in ends)))) or (
                         (line[index] == "-" or line[index] == "+") and (index + 1) < len(line) and is_a_digit(
                     line[index + 1]))):
-                    # t = is_a_digit(line[index])
-                    # print(t)
                     index = self.treat_integer_constant(line, index)
                     token_is_identifier_or_constant = True
                     if index == len(line):
@@ -110,21 +91,17 @@ class Scanner:
                         break
 
                 if not valid_token:
-                    # print(self.__symbol_table.get_size())
                     for identifier in self.__identifiers:
                         if line[
                            index:index + len(identifier)] == identifier:  # in case we find a valid token from token.in
                             print("Valid Token3 - index: " + str(index))
                             print("Valid Token: " + identifier + "\n")
                             valid_token = True
-                            # print(str(identifier)+str(self.__symbol_table.get_position(identifier))+"----------------")
                             self.__pif.append([identifier, self.__symbol_table.get_position(identifier)])
                             index += len(identifier)
                             break
 
-                # print(line[index - 1])
                 if not valid_token and index < len(line) and not (line[index] == " " or line[index] == "\t"):
-                    # print("'" + line[index] + "'")
                     raise Exception("Lexical error: not a valid token. Line: " + str(self.__current_line))
 
             # while the next characters are spaces or tab, we should ignore them
@@ -180,13 +157,12 @@ class Scanner:
 
         ok = True
         while index < len(line) and line[index] != '”' and ok:
-            string += line[index]  # str?
+            string += line[index]
             if not is_a_letter(line[index]) and not is_a_digit(line[index]) and not line[index].isspace():
                 ok = False
             index += 1
 
         if not ok:
-            # print(str(index))
             raise Exception(
                 "Lexical error: strings must contain digits and/or letters. Line: " + str(self.__current_line))
 
@@ -200,7 +176,7 @@ class Scanner:
         print("String Constant: " + string + "\n")
         return index
 
-    def treat_integer_constant(self, line, index):  # ?
+    def treat_integer_constant(self, line, index):
         print("Integer Constant - index: " + str(index))
         sign = 1
         if line[index] == "-" or line[index] == "+":
@@ -214,8 +190,6 @@ class Scanner:
                 number = number * 10
                 index += 1
             else:
-                # print(line + "<-")
-                # print(line[index] + "<-")
                 number = number * 10 + int(line[index])
                 index += 1
 
@@ -225,19 +199,10 @@ class Scanner:
         return index
 
     def add_to_pif_and_st(self, token, type):
-        # print(str(token)+str(type)+"-----------------------------")
         position_in_ST = self.__symbol_table.get_position(token)
-        # print(str(position_in_ST)+str(token)+">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-        # print(position_in_ST)
-        # print(positionInST[0])
         if position_in_ST != -1:
             self.__pif.append([type, position_in_ST])
         else:
-            # for val in self.__pif:
-                # if val[1] >= position_in_ST:
-                    # print("v"+str(val)+"v")
-                    # print("v"+str(val[1])+"v")
-                    # val[1] += 1
             self.__symbol_table.add(token)
             position_in_ST_after_add = self.__symbol_table.get_position(token)
             self.__pif.append([type, position_in_ST_after_add])
@@ -254,5 +219,3 @@ def is_a_letter(char):
                         "t", "u", "v", "w", "x", "y", "z"]:
         return True
     return False
-
-# characters, bools, integers
