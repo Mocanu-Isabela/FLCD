@@ -1,0 +1,17 @@
+read(nr)
+to_integer(nr)
+if(what_type(nr) /= integer):
+	write(to_string(nr) + “is not an integer”)
+	end
+if(nr>1):
+	DEF x, y
+	x := integer
+	y := integer
+	y = to_integer(nr/2) + 1
+	for x in from_to(2, y-1):
+		if(nr%x == 0):
+			write(to_string(nr) + “is not prime”)
+			end
+	write(to_string(nr) + “is prime”)
+else:
+	write(to_string(nr) + “is not prime”)

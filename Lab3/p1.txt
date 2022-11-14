@@ -1,0 +1,16 @@
+read(nr1)
+read(nr2)
+read(nr3)
+to_integer(nr1)
+to_integer(nr2)
+to_integer(nr3)
+if(what_type(nr1) /= integer OR what_type(nr2) /= integer OR what_type(nr3) /= integer):
+	write(“all 3 numbers should be integers”)
+	end
+if(nr1>=nr2 AND nr1>=nr3):
+	write(to_string(nr1) + “is the max”)
+	end
+elif(nr2>=nr1 AND nr2>=nr3):
+	write(to_string(nr2) + “is the max”)
+	end
+write(to_string(nr3) + “is the max”)

@@ -1,0 +1,19 @@
+read(n)
+to_integer(n) 
+if(what_type(n) /= integer):
+	write(to_string(n) + “is not an integer”)
+	end
+DEF x, y
+x := integer
+y := integer
+y = 0
+
+for x in from_to(1, n):
+	read(val)
+to_integer(val)
+if(what_type(val) /= integer):
+		write(to_string(val) + “is not an integer”)
+		end
+	if(val>=y):
+		y = val
+write(to_string(y) + “is the max”)
