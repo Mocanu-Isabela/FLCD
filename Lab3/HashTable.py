@@ -22,21 +22,14 @@ class HashTable:
     def get_position(self, value):
         index = self.hash_function(value)
         if index not in self.__table.keys():
-            return -1
-        return index
+            return (-1, -1)
+        index2 = self.__table[index].index(value)
+        position = (index, index2)
+        return position
 
     def printer(self):
         ST = "Position | Symbol\n"
         for token in self.__table.values():
             index = self.get_position(token[0])
             ST += str(index) + " | " + str(token) + "\n"
-            index += 1
         return ST
-
-    def get_all(self):
-        tokens = []
-        for val in self.__table.values():
-            for token in val:
-                if type(token) is not None:
-                    tokens.append(token)
-        return tokens

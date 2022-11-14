@@ -31,7 +31,8 @@ class Scanner:
             if line[index:index + len(token)] == token:  # in case we find a valid token from token.in
                 print("Valid Token1 - index: " + str(index))
                 print("Valid Token: " + token + "\n")
-                self.__pif.append([token, -1])  # we put it in pif with position - 1 and jump over the entire token
+                self.__pif.append(
+                    [token, (-1, -1)])  # we put it in pif with position - 1 and jump over the entire token
                 index += len(token)
                 break
 
@@ -39,7 +40,7 @@ class Scanner:
         while index < len(line):
             token_is_identifier_or_constant = False
 
-            if is_a_letter(line[index]) and index > 3 and (line.strip()[0:3] == "DEF" or (
+            if self.is_a_letter(line[index]) and index > 3 and (line.strip()[0:3] == "DEF" or (
                     line[index - 2] == "d" and line[index - 1] == "(")):
                 index = self.treat_identifier(line, index)
                 token_is_identifier_or_constant = True
@@ -50,19 +51,19 @@ class Scanner:
                 index + 1] == "0":
                 raise Exception("Lexical error: a number cannot start with 0. Line: " + str(self.__current_line))
 
-            if line[index] == "0" and (index + 1) < len(line) and is_a_digit(line[index + 1]):
+            if line[index] == "0" and (index + 1) < len(line) and self.is_a_digit(line[index + 1]):
                 raise Exception("Lexical error: a number cannot start with 0. Line: " + str(self.__current_line))
 
             expression_instead_of_nr = ((line[index] == "-" or line[index] == "+") and (index + 1) < len(
-                line) and is_a_digit(line[index + 1]) and len(self.__pif) != 0) and (
+                line) and self.is_a_digit(line[index + 1]) and len(self.__pif) != 0) and (
                                                self.__pif[len(self.__pif) - 1][0] == "ident" or
                                                self.__pif[len(self.__pif) - 1][0] == "const")
 
             if not expression_instead_of_nr:
                 ends = [")", ",", " ", "\n", "\t"]
-                if ((is_a_digit(line[index]) and (
+                if ((self.is_a_digit(line[index]) and (
                         index + 1 == len(line) or ((index + 1) < len(line) and (line[index + 1] in ends)))) or (
-                        (line[index] == "-" or line[index] == "+") and (index + 1) < len(line) and is_a_digit(
+                        (line[index] == "-" or line[index] == "+") and (index + 1) < len(line) and self.is_a_digit(
                     line[index + 1]))):
                     index = self.treat_integer_constant(line, index)
                     token_is_identifier_or_constant = True
@@ -86,7 +87,7 @@ class Scanner:
                         print("Valid Token: " + token + "\n")
                         valid_token = True
                         self.__pif.append(
-                            [token, -1])  # we put it in pif with position - 1 and jump over the entire token
+                            [token, (-1, -1)])  # we put it in pif with position - 1 and jump over the entire token
                         index += len(token)
                         break
 
@@ -115,7 +116,7 @@ class Scanner:
         identifier = identifier + line[index]
         index += 1
 
-        while index < len(line) and (is_a_letter(line[index]) or is_a_digit(line[index])):
+        while index < len(line) and (self.is_a_letter(line[index]) or self.is_a_digit(line[index])):
             identifier = identifier + line[index]
             index += 1
 
@@ -131,7 +132,7 @@ class Scanner:
         character = character + line[index]
         index += 1
 
-        if index < len(line) and not is_a_letter(line[index]) and not is_a_digit(line[index]):
+        if index < len(line) and not self.is_a_letter(line[index]) and not self.is_a_digit(line[index]):
             raise Exception("Lexical error: characters must be digits or letters. Line: " + str(self.__current_line))
 
         if index < len(line) and line[index] != "\n":
@@ -158,7 +159,7 @@ class Scanner:
         ok = True
         while index < len(line) and line[index] != '”' and ok:
             string += line[index]
-            if not is_a_letter(line[index]) and not is_a_digit(line[index]) and not line[index].isspace():
+            if not self.is_a_letter(line[index]) and not self.is_a_digit(line[index]) and not line[index].isspace():
                 ok = False
             index += 1
 
@@ -185,7 +186,7 @@ class Scanner:
             index += 1
 
         number = 0
-        while index < len(line) and is_a_digit(line[index]):
+        while index < len(line) and self.is_a_digit(line[index]):
             if line[index] == "0":
                 number = number * 10
                 index += 1
@@ -200,22 +201,20 @@ class Scanner:
 
     def add_to_pif_and_st(self, token, type):
         position_in_ST = self.__symbol_table.get_position(token)
-        if position_in_ST != -1:
+        if position_in_ST != (-1, -1):
             self.__pif.append([type, position_in_ST])
         else:
             self.__symbol_table.add(token)
             position_in_ST_after_add = self.__symbol_table.get_position(token)
             self.__pif.append([type, position_in_ST_after_add])
 
+    def is_a_digit(self, char):
+        if char in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]:
+            return True
+        return False
 
-def is_a_digit(char):
-    if char in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]:
-        return True
-    return False
-
-
-def is_a_letter(char):
-    if char.lower() in ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s",
-                        "t", "u", "v", "w", "x", "y", "z"]:
-        return True
-    return False
+    def is_a_letter(self, char):
+        if char.lower() in ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r",
+                            "s", "t", "u", "v", "w", "x", "y", "z"]:
+            return True
+        return False

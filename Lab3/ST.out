@@ -1,6 +1,7 @@
 Position | Symbol
-18 | ['nr1']
-46 | ['nr2']
-51 | ['nr3']
-4 | ['“all 3 numbers should be integers”']
-3 | ['“is the max”']
+(35, 0) | ['nr1']
+(2, 0) | [2]
+(10, 0) | ['nr2']
+(66, 0) | ['nr3']
+(76, 0) | ['“all 3 numbers should be integers”']
+(19, 0) | ['“is the max”']

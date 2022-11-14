@@ -14,7 +14,7 @@ if __name__ == '__main__':
         tokens.append(x.split('\n')[0])
     f.close()
 
-    p = p2
+    p = p1
     f = open(p, "r")
     program = []
     count = 0
