@@ -35,8 +35,8 @@ class RecursiveDescendent:
 
     def back(self):
         self.i -= 1
-        current = self.alpha.pop(0)
-        self.beta.insert(0, current)
+        current = self.alpha.pop()
+        self.beta.insert(0, current[0])
 
     def another_try(self):
         (current, nr) = self.alpha.pop()
@@ -81,13 +81,13 @@ def tests():
     assert rd.s == "b"
     rd.back()
     assert rd.i == 0
-    assert rd.beta == [('operator', 1), 'program']
-    assert rd.alpha == [('+', 1)]
+    assert rd.beta == ['+', 'program']
+    assert rd.alpha == [('operator', 1)]
     rd.alpha = [("operator", 1), ("type", 1)]
     rd.another_try()
     assert rd.alpha == [('operator', 1), ('type', 2)]
     assert rd.s == "q"
-    assert rd.beta == ['bool', ('operator', 1), 'program']
+    assert rd.beta == ['bool', '+', 'program']
     rd.success()
     assert rd.s == "f"
     print("TEST DONE :)")
