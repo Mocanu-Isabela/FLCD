@@ -1,0 +1,132 @@
+program
+stmtlist
+stmt
+declaration
+simplstmt
+structstmt
+type
+id_list
+id
+array
+const
+identifier
+expression
+operator
+term
+number
+cmpdstmt
+assignstmt
+iostmt
+returnstmt
+ifstmt
+thenstmt
+elsestmt
+whilestmt
+forstmt
+condition
+ev
+relation
+
+;
+,
+=
++
+-
+*
+/
+%
+**
+<
+<=
+==
+!=
+>=
+>
+&&
+||
+|
+!
+(
+)
+[
+]
+{
+}
+float
+bool
+string
+char
+int
+newline
+read
+print
+return
+if
+then
+else
+while
+for
+
+program -> stmtlist
+stmtlist -> stmt ; newline
+stmtlist -> stmtlist stmt ; newline
+stmt -> declaration
+stmt -> simplstmt
+stmt -> structstmt
+declaration -> type id_list
+type -> float
+type -> bool
+type -> string
+type -> char
+type -> int
+id_list -> identifier
+id_list -> id_list, identifier
+identifier -> id
+identifier -> array
+array -> id [ number ]
+cmpdstmt -> { stmtlist }
+simplstmt -> assignstmt
+simplstmt -> iostmt
+simplstmt -> returnstmt
+assignstmt -> identifier = expression
+expression -> expression
+expression -> term
+expression -> expression operator expression
+expression -> ( expression operator expression )
+operator -> +
+operator -> -
+operator -> *
+operator -> /
+operator -> %
+operator -> **
+term -> identifier
+term -> const
+iostmt -> read ( identifier )
+iostmt -> print ( identifier )
+iostmt -> print ( const )
+returnstmt -> return
+returnstmt -> return identifier
+returnstmt -> return const
+structstmt -> cmpdstmt
+structstmt -> ifstmt
+structstmt -> whilestmt
+structstmt -> forstmt
+ifstmt-> thenstmt elsestmt
+ifstmt -> thenstmt
+thenstmt -> if ( condition ) then cmpdstmt
+elsestmt -> else cmpdstmt
+whilestmt -> while ( condition ) cmpdstmt
+forstmt -> for ( assignstmt ; condition ; assignment ) cmpdstmt
+condition -> ev relation ev
+condition -> ( ev relation ev )
+ev -> condition
+ev -> expression
+ev -> ! ev
+relation -> <
+relation -> <=
+relation -> ==
+relation -> !=
+relation -> >=
+relation -> >
+relation -> &&
+relation -> ||
