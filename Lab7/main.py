@@ -114,34 +114,9 @@ class RecursiveDescendent:
             return self.alpha
 
 
-def tests():
-    rd = RecursiveDescendent()
-    rd.beta = ["operator", "program"]
-    rd.expand()
-    assert rd.alpha == [('operator', 1)]
-    assert rd.beta == ['+', 'program']
-    rd.advance()
-    assert rd.i == 1
-    assert rd.beta == ['program']
-    assert rd.alpha == [('operator', 1), ('+', 1)]
-    rd.momentary_insuccess()
-    assert rd.s == "b"
-    rd.back()
-    assert rd.i == 0
-    assert rd.beta == ['+', 'program']
-    assert rd.alpha == [('operator', 1)]
-    rd.alpha = [("operator", 1), ("type", 1)]
-    rd.another_try()
-    assert rd.alpha == [('operator', 1), ('type', 2)]
-    assert rd.s == "q"
-    assert rd.beta == ['bool', '+', 'program']
-    rd.success()
-    assert rd.s == "f"
-    print("TEST DONE :)")
-
-
 class ParserOutput:
-    # table (using father and sibling relation)
+    # table (using father and sibling relation) - not done
+    # productions string
     def __init__(self):
         self.table = {}  # {index: [info, parent, right_sibling]}
 
@@ -166,4 +141,9 @@ class ParserOutput:
 
 if __name__ == '__main__':
     rd = RecursiveDescendent()
-    print(rd.algorithm_run())
+    result = rd.algorithm_run()
+    print(result)
+
+    with open("C:\\Users\\Isabela\\Desktop\\GitHub\\FLCD\\Lab7\\out1.txt", "wt") as file:
+        file.write(str(result))
+    file.close()
